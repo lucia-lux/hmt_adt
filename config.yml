@@ -1,0 +1,15 @@
+# random seed
+random_state: 0
+
+# colour palette:
+palette:
+    - "#412970"
+    - "#FF897C"
+    - "#009AFD"
+    - "#89CBBB"
+    - "#FFDC9F"
+    - "#F7F8FC"
+    - "#863CFF"
+    - "#30CB71"
+# filenames
+preprocessed_file_name: data_preprocessed.parquet

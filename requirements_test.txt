@@ -1,0 +1,5 @@
+black>=23.0.0
+isort>=5.11.0
+pipreqs==0.4.13
+ruff==0.0.278
+unimport==1.0.0
