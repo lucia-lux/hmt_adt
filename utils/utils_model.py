@@ -5,6 +5,7 @@ import numpy as np
 import pandas as pd
 import polars as pl
 import seaborn as sns
+from sklearn.metrics import confusion_matrix
 from sklearn.model_selection import RepeatedKFold, cross_validate
 
 
@@ -39,12 +40,16 @@ def cross_validate_res(
     return None
 
 
-def standard_scale(df: pl.DataFrame, subset: List[str], id_col="id") -> tuple:
+def standard_scale(
+    df: pl.DataFrame, subset: List[str], id_col="id", X_mean=None, X_std=None
+) -> tuple:
     df_select = df.select(pl.col(subset))
     schema = df_select.columns
     X = df_select.to_numpy()
-    X_mean = np.mean(X, axis=0)
-    X_std = np.std(X, axis=0)
+    if X_mean is None:
+        X_mean = np.mean(X, axis=0)
+    if X_std is None:
+        X_std = np.std(X, axis=0)
     X_scaled = (X - X_mean) / X_std
     df_scaled = pl.DataFrame(X_scaled, schema=schema).with_columns(df[id_col])
     return df.drop(subset).join(df_scaled, on=id_col, how="inner"), X_mean, X_std
@@ -71,3 +76,10 @@ def train_test_split(df: pl.DataFrame, test_size=0.3, id_col="id") -> pl.DataFra
     df_test = df.sample(fraction=test_size, shuffle=True)
     df_train = df.filter(~pl.col(id_col).is_in(df_test[id_col].to_list()))
     return df_train, df_test
+
+
+def plot_confusion_matrix(y_act: np.array, y_pred: np.array, figure_path: str) -> tuple:
+    conf_mx = confusion_matrix(y_act, y_pred)
+    plt.matshow(conf_mx)
+    plt.savefig(figure_path)
+    return None
