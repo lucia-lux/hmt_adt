@@ -10,7 +10,7 @@ from utils.utils_load_data import (compound_cols_or, convert_str_col,
                                    read_file_names, read_files,
                                    remove_duplicates, select_df)
 
-
+import ipdb
 def main(extension: str) -> None:
     files = read_file_names(DATASET_DIR, extension)
     # read files & get dfs of interest
@@ -33,7 +33,6 @@ def main(extension: str) -> None:
             )
         ]
     )
-
     # get summary values for medical history (physical conditions),
     # medical history (mental health),
     # treatment types
@@ -167,7 +166,6 @@ def main(extension: str) -> None:
     ###################################################################
     # check for duplicates
     df_out = remove_duplicates(df_out)
-
     df_out.write_parquet(
         os.path.join(DATASET_DIR, config["preprocessed_file_name"].data)
     )
